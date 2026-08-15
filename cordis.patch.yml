@@ -1,0 +1,3 @@
+- id: dsh-plugin-firewall
+  name: '@mkaliezz/dsh-plugin-firewall'
+  config: {}

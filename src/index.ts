@@ -57,7 +57,7 @@ export function apply(ctx: any): void {
     description: 'Statically inspect a local DSH plugin package without executing it.',
     recordInput: false,
     async handler(invocation: any) {
-      const target = String(invocation.args?.[0] ?? '.').trim() || '.'
+      const target = String(invocation.rawInput ?? '').trim() || '.'
       const receipt = await inspectDirectory(target)
       return { kind: 'success', text: JSON.stringify(receipt, null, 2) }
     },

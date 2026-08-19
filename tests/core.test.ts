@@ -27,3 +27,14 @@ test('digest is deterministic regardless of input object insertion order', () =>
   const b = inspectText('demo', { 'a.ts': 'fetch("x")', 'b.ts': 'process.env.X' })
   assert.equal(a.digest, b.digest)
 })
+
+test('plugin-firewall command inspects the supplied path', async () => {
+  const commands: Record<string, (invocation: { rawInput?: string }) => Promise<{ kind: string; text: string }>> = {}
+  const { apply } = await import('../src/index.js')
+  apply({ commands: { register: (d: { name: string; handler: unknown }) => { commands[d.name] = d.handler as never } } })
+  const result = await commands['plugin-firewall']!({ rawInput: process.cwd() })
+  assert.equal(result.kind, 'success')
+  const receipt = JSON.parse(result.text)
+  assert.equal(typeof receipt.digest, 'string')
+  assert.equal(receipt.packageName, '@mkaliezz/dsh-plugin-firewall')
+})
